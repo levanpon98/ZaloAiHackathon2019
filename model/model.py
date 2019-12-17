@@ -7,14 +7,14 @@ from functools import reduce
 # from keras_ import EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6
 
 from tensorflow.keras import layers
-from tensorflow.keras.layers import Flatten, Activation, Dropout
+from tensorflow.keras.layers import Dropout
 from tensorflow.keras import initializers
 from tensorflow.keras import models
-from tfkeras import EfficientNetB0, EfficientNetB1, EfficientNetB2
-from tfkeras import EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6
+from model.tfkeras import EfficientNetB0, EfficientNetB1, EfficientNetB2
+from model.tfkeras import EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6
 
-from layers import ClipBoxes, RegressBoxes, FilterDetections, wBiFPNAdd, BatchNormalization
-from initializers import PriorProbability
+from model.layers import ClipBoxes, RegressBoxes, FilterDetections, wBiFPNAdd, BatchNormalization
+from model.initializers import PriorProbability
 
 w_bifpns = [64, 88, 112, 160, 224, 288, 384]
 image_sizes = [512, 640, 768, 896, 1024, 1280, 1408]

@@ -27,19 +27,16 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import json
 import math
 import string
 import collections
-import numpy as np
 
 from six.moves import xrange
 from keras_applications.imagenet_utils import _obtain_input_shape
-from keras_applications.imagenet_utils import decode_predictions
 from keras_applications.imagenet_utils import preprocess_input as _preprocess_input
 
 from utils import get_submodules_from_kwargs
-from layers import BatchNormalization
+from model.layers import BatchNormalization
 
 backend = None
 layers = None

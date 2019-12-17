@@ -27,13 +27,13 @@ import tensorflow as tf
 
 from tensorflow import keras
 import tensorflow.keras.backend as K
-from tensorflow.keras.optimizers import Adam, SGD
+from tensorflow.keras.optimizers import Adam
 
 from augmentor.color import VisualEffect
 from augmentor.misc import MiscEffect
-from model import efficientdet
-from losses import smooth_l1, focal
-from efficientnet import BASE_WEIGHTS_PATH, WEIGHTS_HASHES
+from model.model import efficientdet
+from model.losses import smooth_l1, focal
+from model.efficientnet import BASE_WEIGHTS_PATH, WEIGHTS_HASHES
 
 
 def makedirs(path):
@@ -191,7 +191,6 @@ def create_generators(args):
         train_generator = CocoGenerator(
             args.coco_path,
             'train',
-            args.json_name,
             misc_effect=misc_effect,
             visual_effect=visual_effect,
             **common_args

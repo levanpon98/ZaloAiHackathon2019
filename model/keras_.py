@@ -1,5 +1,5 @@
 from utils import inject_keras_modules, init_keras_custom_objects
-import efficientnet as model
+from model import efficientnet as model
 
 EfficientNetB0 = inject_keras_modules(model.EfficientNetB0)
 EfficientNetB1 = inject_keras_modules(model.EfficientNetB1)

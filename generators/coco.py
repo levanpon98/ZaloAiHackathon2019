@@ -17,7 +17,7 @@ limitations under the License.
 from generators.common import Generator
 import os
 import numpy as np
-from pycocotools.coco import COCO
+from coco.pycocotools.coco import COCO
 import cv2
 
 
@@ -27,7 +27,7 @@ class CocoGenerator(Generator):
     See https://github.com/cocodataset/cocoapi/tree/master/PythonAPI for more information.
     """
 
-    def __init__(self, data_dir, set_name, json_name, **kwargs):
+    def __init__(self, data_dir, set_name, **kwargs):
         """
         Initialize a COCO data generator.
 
@@ -38,10 +38,8 @@ class CocoGenerator(Generator):
 
         self.data_dir = data_dir
         self.set_name = set_name
-        if json_name is not None:
-            self.coco = COCO(os.path.join(data_dir, 'annotations', json_name + '.json'))
-        else:
-            self.coco = COCO(None)
+        self.coco = COCO(os.path.join(data_dir, 'annotations', set_name + '.json'))
+
         self.image_ids = self.coco.getImgIds()
 
         self.load_classes()

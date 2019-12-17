@@ -461,7 +461,7 @@ class TransformParameters:
         relative_translation:  If true (the default), interpret translation as a factor of the image size.
                                If false, interpret it as absolute pixels.
     """
-
+    
     def __init__(
             self,
             fill_mode='nearest',
