@@ -17,7 +17,7 @@ limitations under the License.
 from generators.common import Generator
 import os
 import numpy as np
-from coco.pycocotools.coco import COCO
+from pycocotools.coco import COCO
 import cv2
 
 
