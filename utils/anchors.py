@@ -1,13 +1,15 @@
 import numpy as np
 # import keras
 from tensorflow import keras
+import pyximport
+pyximport.install()
 
+from utils.compute_overlap import compute_overlap
 
 
 class AnchorParameters:
     """
     The parameters that define how anchors are generated.
-
     Args
         sizes : List of sizes to use. Each size corresponds to one feature level.
         strides : List of strides to use. Each stride correspond to one feature level.
@@ -36,24 +38,6 @@ AnchorParameters.default = AnchorParameters(
 )
 
 
-def compute_overlap(boxes1, boxes2):
-    """Computes IoU overlaps between two sets of boxes.
-    boxes1, boxes2: [N, (y1, x1, y2, x2)].
-    For better performance, pass the largest set first and the smaller second.
-    """
-    # Areas of anchors and GT boxes
-    area1 = (boxes1[:, 2] - boxes1[:, 0]) * (boxes1[:, 3] - boxes1[:, 1])
-    area2 = (boxes2[:, 2] - boxes2[:, 0]) * (boxes2[:, 3] - boxes2[:, 1])
-
-    # Compute overlaps to generate matrix [boxes1 count, boxes2 count]
-    # Each cell contains the IoU value.
-    overlaps = np.zeros((boxes1.shape[0], boxes2.shape[0]))
-    for i in range(overlaps.shape[1]):
-        box2 = boxes2[i]
-        overlaps[:, i] = compute_iou(box2, boxes1, area2[i], area1)
-    return overlaps
-
-
 def anchor_targets_bbox(
         anchors,
         image_group,
@@ -64,7 +48,6 @@ def anchor_targets_bbox(
 ):
     """
     Generate anchor targets for bbox detection.
-
     Args
         anchors: np.array of annotations of shape (N, 4) for (x1, y1, x2, y2).
         image_group: List of BGR images.
@@ -73,7 +56,6 @@ def anchor_targets_bbox(
         mask_shape: If the image is padded with zeros, mask_shape can be used to mark the relevant part of the image.
         negative_overlap: IoU overlap for negative anchors (all anchors with overlap < negative_overlap are negative).
         positive_overlap: IoU overlap or positive anchors (all anchors with overlap > positive_overlap are positive).
-
     Returns
         labels_batch: batch that contains labels & anchor states (np.array of shape (batch_size, N, num_classes + 1),
                       where N is the number of anchors for an image and the last column defines the anchor state (-1 for ignore, 0 for bg, 1 for fg).
@@ -132,13 +114,11 @@ def compute_gt_annotations(
 ):
     """
     Obtain indices of gt annotations with the greatest overlap.
-
     Args
         anchors: np.array of annotations of shape (N, 4) for (x1, y1, x2, y2).
         annotations: np.array of shape (K, 5) for (x1, y1, x2, y2, label).
         negative_overlap: IoU overlap for negative anchors (all anchors with overlap < negative_overlap are negative).
         positive_overlap: IoU overlap or positive anchors (all anchors with overlap > positive_overlap are positive).
-
     Returns
         positive_indices: indices of positive anchors
         ignore_indices: indices of ignored anchors
@@ -159,11 +139,9 @@ def compute_gt_annotations(
 def layer_shapes(image_shape, model):
     """
     Compute layer shapes given input image shape and the model.
-
     Args
         image_shape: The shape of the image.
         model: The model to use for computing how the image shape is transformed in the pyramid.
-
     Returns
         A dictionary mapping layer names to image shapes.
     """
@@ -198,11 +176,9 @@ def make_shapes_callback(model):
 def guess_shapes(image_shape, pyramid_levels):
     """
     Guess shapes based on pyramid levels.
-
     Args
          image_shape: The shape of the image.
          pyramid_levels: A list of what pyramid levels are used.
-
     Returns
         A list of image shapes at each pyramid level.
     """
@@ -219,13 +195,11 @@ def anchors_for_shape(
 ):
     """
     Generators anchors for a given shape.
-
     Args
         image_shape: The shape of the image.
         pyramid_levels: List of ints representing which pyramids to use (defaults to [3, 4, 5, 6, 7]).
         anchor_params: Struct containing anchor parameters. If None, default values are used.
         shapes_callback: Function to call for getting the shape of the image at different pyramid levels.
-
     Returns
         np.array of shape (N, 4) containing the (x1, y1, x2, y2) coordinates for the anchors.
     """
@@ -257,7 +231,6 @@ def anchors_for_shape(
 def shift(feature_map_shape, stride, anchors):
     """
     Produce shifted anchors based on shape of the map and stride size.
-
     Args
         feature_map_shape : Shape to shift the anchors over.
         stride : Stride to shift the anchors with over the shape.
@@ -290,14 +263,11 @@ def shift(feature_map_shape, stride, anchors):
 def generate_anchors(base_size=16, ratios=None, scales=None):
     """
     Generate anchor (reference) windows by enumerating aspect ratios X scales w.r.t. a reference window.
-
     Args:
         base_size:
         ratios:
         scales:
-
     Returns:
-
     """
     if ratios is None:
         ratios = AnchorParameters.default.ratios
@@ -331,15 +301,12 @@ def generate_anchors(base_size=16, ratios=None, scales=None):
 
 def bbox_transform(anchors, gt_boxes, mean=None, std=None):
     """
-
     Args:
         anchors: (N, 4)
         gt_boxes: (N, 4)
         mean:
         std:
-
     Returns:
-
     """
 
     if mean is None:
